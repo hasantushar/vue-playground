@@ -17,7 +17,7 @@
 
     <h2>Search Result</h2>
     <h4 v-for="todo in searchResult" :key="todo.id">{{ todo.title }}</h4>
-    
+
   </div>
 </template>
 
@@ -31,7 +31,10 @@ const searchText = ref("");
 const searchResult = ref("");
 const currentPage = ref("");
 
+const timeoutRef = ref(null);
+
 const todoPaginated = computed(() => {
+
   if (currentPage.value) {
     return todos.value.slice(
       (currentPage.value - 1) * 10,
@@ -43,9 +46,19 @@ const todoPaginated = computed(() => {
 });
 
 const searchTodos = () => {
-  searchResult.value = todos.value.filter((t) =>
-    t.title.includes(searchText.value)
-  );
+
+    if(timeoutRef.value !== null) {clearTimeout(timeoutRef.value)}
+
+    timeoutRef.value = setTimeout(()=>{
+
+        searchResult.value = todos.value.filter((t) =>
+            t.title.includes(searchText.value)
+    ); 
+    }, 500);
+
+    // searchResult.value = todos.value.filter((t) =>
+    //     t.title.includes(searchText.value)
+    // );
 };
 
 const setCurrentPage = (index) => {
